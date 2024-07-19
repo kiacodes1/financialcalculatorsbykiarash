@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Calculators by Kiarash</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+    #calculator {
+        background-color: #78b3ef;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        border-radius: 2rem;
+        box-shadow: 1rem 1rem 0.1rem rgba(0, 0, 0, 0.1);
+    }
+    #calculator h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+    input[type="number"], button {
+        width: calc(100% - 40px);
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    button {
+        background-color: #010b16;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 1rem;
+    }
+    canvas {
+        margin-top: 20px;
+    }
+</style>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+            <ul class="nav-list">
+                <li><a href="Stockanalyzer.html">Stock Analyzer</a></li>
+                <li><a href="carloan.html">Car Loan</a></li>
+                <li><a href="index.html">Loan Calculator</a></li>
+                <li><a href="compinterest.html">Compound Interest</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="calculator">
+        <h2>Car Loan Calculator</h2>
+        <input type="number" id="carPrice" placeholder="Car Price" step="1000">
+        <input type="number" id="downPayment" placeholder="Down Payment" step="1000">
+        <input type="number" id="interestRate" placeholder="Interest Rate (%)" step="0.1">
+        <input type="number" id="loanTerm" placeholder="Loan Term (years)" step="1">
+        <button onclick="calculateLoan()">Calculate</button>
+        <canvas id="loanChart"></canvas>
+    </div>
+    
+    <script>
+        function calculateLoan() {
+            const carPrice = parseFloat(document.getElementById('carPrice').value);
+            const downPayment = parseFloat(document.getElementById('downPayment').value);
+            const loanAmount = carPrice - downPayment;
+            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
+            const loanTerm = parseFloat(document.getElementById('loanTerm').value) * 12; // Convert years to months
+    
+            const monthlyInterestRate = interestRate / 12;
+            const monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTerm));
+            const totalPayment = monthlyPayment * loanTerm;
+    
+            const ctx = document.getElementById('loanChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Payment', 'Loan Amount'],
+                    datasets: [{
+                        label: 'Amount',
+                        data: [totalPayment, loanAmount],
+                        backgroundColor: ['#36a2eb', '#ff6384'],
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+        function toggleMenu() {
+    const navList = document.querySelector('.nav-list');
+    navList.classList.toggle('active');
+}
+    </script>
+    
+</body>
+</html>

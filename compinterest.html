@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Calculators by Kiarash</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        #calculator {
+            background-color: #78b3ef;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border-radius: 2rem;
+        box-shadow: 1rem 1rem 0.1rem rgba(0, 0, 0, 0.1);
+        }
+        #calculator h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input[type="number"], button {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #02172d;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 2rem;
+        /* box-shadow: 1rem 1rem 0.1rem rgba(0, 0, 0, 0.1); */
+        }
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+        <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+            <ul class="nav-list">
+                <li><a href="Stockanalyzer.html">Stock Analyzer</a></li>
+                <li><a href="carloan.html">Car Loan</a></li>
+                <li><a href="index.html">Loan Calculator</a></li>
+                <li><a href="compinterest.html">Compound Interest</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div id="calculator">
+        <h2>Compound Interest Calculator</h2>
+        <input type="number" id="principal" placeholder="Principal Amount">
+        <input type="number" id="rate" placeholder="Annual Interest Rate (%)">
+        <input type="number" id="time" placeholder="Time (years)">
+        <input type="number" id="monthlyContribution" placeholder="Monthly Contribution">
+        <button onclick="calculateInterest()">Calculate</button>
+        <canvas id="chart"></canvas>
+    </div>
+    
+    <script>
+        function calculateInterest() {
+            const principal = parseFloat(document.getElementById('principal').value);
+            const rate = parseFloat(document.getElementById('rate').value) / 100;
+            const time = parseFloat(document.getElementById('time').value);
+            const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+            
+            const labels = [];
+            const data = [];
+    
+            let amount = principal;
+            for (let i = 1; i <= time; i++) {
+                amount = (amount + monthlyContribution) * (1 + rate);
+                labels.push(i);
+                data.push(amount.toFixed(2));
+            }
+    
+            const ctx = document.getElementById('chart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Monthly Contributions',
+                        data: monthlyContribution ? data.map((_, i) => monthlyContribution) : [],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        fill: true
+                    }]
+                },
+
+                data: {
+                    labels: labels,
+
+                    datasets: [{
+                        label: 'Investment Growth',
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+        function toggleMenu() {
+    const navList = document.querySelector('.nav-list');
+    navList.classList.toggle('active');
+}
+    </script>
+    
+</body>
+</html>

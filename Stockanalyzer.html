@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>financial calculators by Kiarash</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        #analyzer {
+            background-color: #009bde;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            color: antiquewhite;
+            box-shadow: 1rem 1rem 1rem;;
+        }
+        #analyzer h2 {
+            margin-bottom: 20px;
+            color: #f6f4f4;
+        }
+        button {
+            background-color: #00162d;
+            color: #fff;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        #stockInfo {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 18pt;
+        }
+    </style>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
+                <ul class="nav-list">
+                    <li><a href="Stockanalyzer.html">Stock Analyzer</a></li>
+                    <li><a href="carloan.html">Car Loan</a></li>
+                    <li><a href="index.html">Loan Calculator</a></li>
+                    <li><a href="compinterest.html">Compound Interest</a></li>
+                </ul>
+            </nav>
+        </header>
+    <div id="analyzer">
+        <h2>Stock Analyzer</h2>
+        <label for="symbol">Enter Stock Symbol:</label>
+        <input type="text" id="symbol" placeholder="AAPL">
+        <button onclick="analyzeStock()">Analyze</button>
+        <div id="stockInfo"></div>
+    </div>
+    
+    <script>
+        async function analyzeStock() {
+            const symbol = document.getElementById('symbol').value;
+            const apiKey = '6S0ITULR7GO4BM3N'; // Replace 'YOUR_API_KEY' with your Alpha Vantage API key
+            const apiUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${apiKey}`;
+    
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+    
+                const latestTradingDay = data['Meta Data']['3. Last Refreshed'];
+                const latestData = data['Time Series (Daily)'][latestTradingDay];
+                const currentPrice = parseFloat(latestData['4. close']).toFixed(2);
+                const dailyHigh = parseFloat(latestData['2. high']).toFixed(2);
+                const dailyLow = parseFloat(latestData['3. low']).toFixed(2);
+                const volume = parseInt(latestData['5. volume']);
+                
+                const stockInfo = `
+                    <h3>${symbol}</h3>
+                    <p>Current Price: $${currentPrice}</p>
+                    <p>Daily High: $${dailyHigh}</p>
+                    <p>Daily Low: $${dailyLow}</p>
+                    <p>Recent Trading Volume: ${volume}</p>
+                `;
+    
+                document.getElementById('stockInfo').innerHTML = stockInfo;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('stockInfo').innerHTML = '<p>Error fetching data. Please try again.</p>';
+            }
+        }
+        function toggleMenu() {
+    const navList = document.querySelector('.nav-list');
+    navList.classList.toggle('active');
+}
+    </script>
+    
+    </body>  
+</html>
